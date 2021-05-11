@@ -19,13 +19,26 @@ class GameObject:
         self._radius = None
         self._collided = False
     
-    @property
-    def image(self):
-        return self._image
+    
     @property
     def xy(self):
-        return (self._x, self._y)
-    
+        return [self._x, self._y]
+    @xy.setter
+    def xy(self,xy):
+        try:
+            self._x, self._y = xy
+            if self._x > self._objectBound[1]:
+                self._x = self._objectBound[1]
+            if self._x > self._objectBound[0]:
+                self._x = self._objectBound[0]
+            if self._y > self._objectBound[3]:
+                self._y = self._objectBound[3]
+            if self._y > self._objectBound[2]:
+                self._y = self._objectBound[2]
+        except ValueError:
+            raise ValueError("Pass an iterable with two items")
+        else:
+            pass
     @property
     def x(self):
         return self._x
@@ -41,6 +54,12 @@ class GameObject:
     def y(self, value):
         self._y = value
     
+    @property
+    def hp(self):
+        return self._hp
+    @hp.setter
+    def hp(self, value):
+        self._hp = value
 
     def to_the_left(self):
         self._changeX = -self._moveScale
@@ -50,9 +69,9 @@ class GameObject:
         self._changeY = -self._moveScale
     def to_the_top(self):
         self._changeY = self._moveScale
-    def stopX(self):
+    def stop_x(self):
         self._changeX = 0
-    def to_the_left(self):
+    def stop_y(self):
         self._changeY = 0
 
     def update(self):
@@ -66,6 +85,30 @@ class GameObject:
             self.y = self._objectBound[3]
         if self.y < self._objectBound[2]:
             self.y = self._objectBound[2]
+
+    @property
+    def image(self):
+        return self._image
+    @property
+    def available(self):
+        return self._available
+    @available.setter
+    def available(self, value):
+        self._available = value
+    
+    @property
+    def collided (self):
+        return self._collided
+    @collided.setter
+    def collided(self,value):
+        self._collided = value
+
+    @property
+    def center(self):
+        return self._center
+    @property
+    def radius(self):
+        return self._radius
 
     def _collided_(self, it):
         distance = math.hypot(self._center[0] - it._center[0], self.center - it.center[1])
