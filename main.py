@@ -56,7 +56,7 @@ while running:
                 else:
                     KeyCountY -= 1
                     player.stop_y()
-        if event.type == pygame.quit:
+        if event.type == pygame.QUIT:
             running = False
     screen.blit(background,(0,0))
     Missiles = [item for item in Missiles if item.available]
