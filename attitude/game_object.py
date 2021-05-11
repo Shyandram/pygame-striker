@@ -1,5 +1,6 @@
+import math
+
 class GameObject:
-    import math
     def __init__(self, playground = None):
         if playground is None:
             self._playground = [1200,900]
@@ -17,6 +18,14 @@ class GameObject:
         self._center = None
         self._radius = None
         self._collided = False
+    
+    @property
+    def image(self):
+        return self._image
+    @property
+    def xy(self):
+        return (self._x, self._y)
+    
     @property
     def x(self):
         return self._x
@@ -31,6 +40,7 @@ class GameObject:
     @y.setter
     def y(self, value):
         self._y = value
+    
 
     def to_the_left(self):
         self._changeX = -self._moveScale
