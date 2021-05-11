@@ -18,7 +18,8 @@ class GameObject:
         self._center = None
         self._radius = None
         self._collided = False
-    
+    def __del__(self):
+        print(self.__class__.__name__, "is being automatically destroyed. GoodBye!")
     
     @property
     def xy(self):
@@ -66,9 +67,9 @@ class GameObject:
     def to_the_right(self):
         self._changeX = self._moveScale
     def to_the_bottom(self):
-        self._changeY = -self._moveScale
-    def to_the_top(self):
         self._changeY = self._moveScale
+    def to_the_top(self):
+        self._changeY = -self._moveScale
     def stop_x(self):
         self._changeX = 0
     def stop_y(self):
