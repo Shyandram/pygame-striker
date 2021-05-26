@@ -26,7 +26,8 @@ class MyMissile (GameObject):
         if self._y < self._objectBound[2]:
             self._available = False
         self._center = self._x +self._image.get_rect().w/2, self._y + self._image.get_rect().w /2
-    def collision_detct(self, enemies):
+    
+    def collision_detect(self, enemies):
         for m in enemies:
             if self._collided_(m):
                 self._hp -= 10

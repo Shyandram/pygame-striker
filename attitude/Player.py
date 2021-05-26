@@ -21,14 +21,16 @@ class Player (GameObject):
             self._x = xy[0]
             self._y = xy[1]
             
-        self._objectBound = (10,self._playground[0] - (self._image.get_rect().w + 10), 10, self._playground[1] - (self._image.get_rect().h+10))
+        self._objectBound = (10,self._playground[0] - (self._image.get_rect().w + 10), 
+                             10, self._playground[1] - (self._image.get_rect().h+10))
     
     
 
     def update(self):
         GameObject.update(self)
         self._center = self._x +self._image.get_rect().w/2, self._y + self._image.get_rect().h /2
-    def collision_detct(self, enemies):
+
+    def collision_detect(self, enemies):
         for m in enemies:
             if self._collided_(m):
                 self._hp -= 10

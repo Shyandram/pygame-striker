@@ -21,6 +21,7 @@ class GameObject:
     def __del__(self):
         print(self.__class__.__name__, "is being automatically destroyed. GoodBye!")
     
+    
     @property
     def xy(self):
         return [self._x, self._y]
@@ -112,7 +113,7 @@ class GameObject:
         return self._radius
 
     def _collided_(self, it):
-        distance = math.hypot(self._center[0] - it._center[0], self.center - it.center[1])
+        distance = math.hypot(self._center[0] - it._center[0], self.center[1] - it.center[1])
         if distance < self._radius + it.radius:
             return True
         else:
