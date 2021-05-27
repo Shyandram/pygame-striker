@@ -13,7 +13,7 @@ class Explosion(GameObject):
     def __init__(self, xy=None):
         GameObject.__init__(self)
         if xy is None:
-            self._y -= 100
+            self._y = -100
             self._x -= random.randint(10, self._playground[0] - 100)
         else:
             self._x = xy[0]  # 座標屬性

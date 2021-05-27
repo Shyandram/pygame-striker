@@ -12,7 +12,7 @@ import time
 pygame.init()
 
 clock = pygame.time.Clock()
-
+st_running = True
 running = True
 fps = 60
 movingScale = 600/fps
@@ -55,6 +55,20 @@ emtime =0
 endtime = 0
 score = 0
 
+# add a startup screen
+while st_running:
+    screen.blit(background,(0,0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            st_running = False
+        if event.type == pygame.KEYDOWN:
+            st_running = False
+    message_display("Striker",screenWidth/2,screenHigh/2,50)
+    message_display("Press a bottom to start",screenWidth/2,screenHigh/2-50,30)
+    pygame.display.update()
+    dt = clock.tick(fps)
+
+# Main Game
 activate_time = time.time()
 while running:
     for event in pygame.event.get():
@@ -107,7 +121,7 @@ while running:
                     Cure.append(Heal(player.center))
             if event.key == pygame.K_c:
                 if score > 50:
-                    score -= 40
+                    score -= 30
                     for e in Enemies:
                         score += 1
                         Boom.append(Explosion(e.center))   
@@ -115,13 +129,13 @@ while running:
                     Enemies = []
                     
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a or pygame.K_d == event.key:
+            if event.key == pygame.K_a or event.key == pygame.K_d:
                 if KeyCountX == 1:
                     KeyCountX = 0
                     player.stop_x()
                 else:
                     KeyCountX -= 1
-            if event.key == pygame.K_s or pygame.K_w == event.key:
+            if event.key == pygame.K_s or event.key == pygame.K_w:
                 if KeyCountY == 1:
                     KeyCountY = 0
                     player.stop_y()
@@ -182,10 +196,10 @@ while running:
         if dead == False:
             dead = True
             dead_time = time.time()
+            endtime = dead_time+ 5
         Enemies = []
         Missiles = []
         E_Missiles=[]
-        endtime += clock.tick_busy_loop(fps*3)
         Boom.append(Explosion(player.center))
         player.stop_x()
         player.stop_y()
@@ -196,30 +210,33 @@ while running:
         if stage1 == True:
             message_display("stage1 Clear",screenWidth/2,screenHigh/2-60,20)
             
-        message_display("Final Score: " + str(score),screenWidth/2,screenHigh/2-90,30)
+        message_display("Score: " + str(score),screenWidth/2,screenHigh/2-90,20)
         message_display("Survive Time: " + str(int(dead_time - activate_time))+"sec",screenWidth/2,screenHigh/2-120,20)
+        message_display("Final Score(Score + Survive Time): " + str(score + int(dead_time - activate_time)),screenWidth/2,screenHigh/2-150,20)
         player.hp = -99
-        if fps*15 < (endtime):
+        if (time.time() ) > (endtime):
             running = False
         
     else:
         message_display("Score: "+str(score),screenWidth/2,screenHigh-10,20)
         message_display("Hp: "+str(99 + player.hp),100,50,20)
-    
+        if score > 20:
+            message_display("Press h for Heal",100,70,20)
+        if score > 50:
+            message_display("Press c for Destroy all enemy",screenWidth/2,screenHigh-30,20)
+
     if score > 20:
         if stage0 == False:
             stage0 = True
             score += 20
             pygame.time.set_timer(launchEnemyMissile, 500)
-        message_display("Press h for Heal",100,70,20)
-    if score > 50:
-        message_display("Press c for Destroy all enemy",screenWidth/2,screenHigh-30,20)
-
+        
+    
     if score > 70:
         if stage1 == False:
             stage1 = True
             score += 50
-            pygame.time.set_timer(createEnemy, 1000)
+            pygame.time.set_timer(createEnemy, 800)
         
     pygame.display.update()
     dt = clock.tick(fps)

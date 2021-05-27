@@ -22,7 +22,6 @@ class Heal(GameObject):
         if Heal.heal_effect:
             pass
         else:
-            # 建立heal效果圖片序列，這裡只用五張圖
             __parent_path = Path(__file__).parents[1]
             icon_path = __parent_path / 'res' / 'cure_small.png'
             Heal.heal_effect.append(pygame.image.load(icon_path))
