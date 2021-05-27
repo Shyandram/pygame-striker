@@ -23,7 +23,7 @@ class Player (GameObject):
             
         self._objectBound = (10,self._playground[0] - (self._image.get_rect().w + 10), 
                              10, self._playground[1] - (self._image.get_rect().h+10))
-    
+        
     
 
     def update(self):
