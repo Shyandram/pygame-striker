@@ -14,7 +14,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 running = True
-fps = 60
+fps = 45
 movingScale = 600/fps
 
 def text_objects(text, font):
@@ -107,7 +107,7 @@ while running:
                     Cure.append(Heal(player.center))
             if event.key == pygame.K_c:
                 if score > 50:
-                    score -= 50
+                    score -= 40
                     for e in Enemies:
                         score += 1
                         Boom.append(Explosion(e.center))   
@@ -189,13 +189,13 @@ while running:
         message_display("Game Over",screenWidth/2,screenHigh/2,50)
         if stage0 == True:
             message_display("stage0 Clear",screenWidth/2,screenHigh/2-30,30)
-            score + 20
+            
         if stage1 == True:
-            message_display("stage1 Clear",screenWidth/2,screenHigh/2-50,30)
-            score + 30
-        message_display("Final Score: " + str(score),screenWidth/2,screenHigh/2-80,30)
+            message_display("stage1 Clear",screenWidth/2,screenHigh/2-60,30)
+            
+        message_display("Final Score: " + str(score),screenWidth/2,screenHigh/2-90,30)
         player.hp = -99
-        if 500 < (endtime):
+        if fps*15 < (endtime):
             running = False
         
     else:
@@ -205,13 +205,18 @@ while running:
     if score > 20:
         if stage0 == False:
             stage0 = True
+            score += 20
             pygame.time.set_timer(launchEnemyMissile, 500)
         message_display("Press h for Heal",100,70,20)
     if score > 50:
+        message_display("Press c for Destroy all enemy",screenWidth/2,screenHigh-30,20)
+
+    if score > 70:
         if stage1 == False:
             stage1 = True
+            score += 50
             pygame.time.set_timer(createEnemy, 1000)
-        message_display("Press c for Destroy all enemy",screenWidth/2,screenHigh-30,20)
+        
     pygame.display.update()
     dt = clock.tick(fps)
 pygame.quit()
