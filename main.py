@@ -14,7 +14,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 running = True
-fps = 45
+fps = 60
 movingScale = 600/fps
 
 def text_objects(text, font):
@@ -50,12 +50,12 @@ pygame.time.set_timer(launchEnemyMissile, 1000)
 
 stage0 = False
 stage1 = False
-
+dead = False
 emtime =0
 endtime = 0
 score = 0
 
-print(clock)
+activate_time = time.time()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -179,6 +179,9 @@ while running:
     
     
     if player.hp <= -99:
+        if dead == False:
+            dead = True
+            dead_time = time.time()
         Enemies = []
         Missiles = []
         E_Missiles=[]
@@ -188,12 +191,13 @@ while running:
         player.stop_y()
         message_display("Game Over",screenWidth/2,screenHigh/2,50)
         if stage0 == True:
-            message_display("stage0 Clear",screenWidth/2,screenHigh/2-30,30)
+            message_display("stage0 Clear",screenWidth/2,screenHigh/2-30,20)
             
         if stage1 == True:
-            message_display("stage1 Clear",screenWidth/2,screenHigh/2-60,30)
+            message_display("stage1 Clear",screenWidth/2,screenHigh/2-60,20)
             
         message_display("Final Score: " + str(score),screenWidth/2,screenHigh/2-90,30)
+        message_display("Survive Time: " + str(int(dead_time - activate_time))+"sec",screenWidth/2,screenHigh/2-120,20)
         player.hp = -99
         if fps*15 < (endtime):
             running = False
@@ -220,5 +224,3 @@ while running:
     pygame.display.update()
     dt = clock.tick(fps)
 pygame.quit()
-
-print("Your score is ", score) 
