@@ -3,6 +3,7 @@ from res.setting import *
 from attitude.game_object import  *
 from attitude.Player import  *
 from attitude.MyMissile import *
+from attitude.EnemyMissile import *
 from attitude.Enemy import *
 from attitude.explosion import *
 import time
@@ -18,10 +19,10 @@ movingScale = 600/fps
 def text_objects(text, font):
     textSurface = font.render(text, True, (255,255,255))
     return textSurface, textSurface.get_rect()
-def message_display(text):
+def message_display(text,x,y):
     largeText = pygame.font.Font('freesansbold.ttf',20)
     TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = ((screenWidth-100),(screenHigh-100))
+    TextRect.center = ((screenWidth-x),(screenHigh-y))
     screen.blit(TextSurf, TextRect)
 
     pygame.display.update()
@@ -33,15 +34,23 @@ KeyCountX = 0
 KeyCountY = 0
 
 Missiles = []
+E_Missiles=[]
 Enemies = []
 Boom = []
 
 launchMissile = pygame.USEREVENT + 1
 createEnemy = pygame.USEREVENT + 2
 explosion = pygame.USEREVENT + 3
+launchEnemyMissile = pygame.USEREVENT + 4
 
 pygame.time.set_timer(createEnemy, 1000)
+pygame.time.set_timer(launchEnemyMissile, 1000)
 
+emtime =0
+endtime = 0
+score = 0
+
+print(clock)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -54,6 +63,14 @@ while running:
             Missiles.append(MyMissile(xy=(m_x, m_y), playground=playground, sensitivity=movingScale))
         if event.type == createEnemy:
             Enemies.append(enemy(playground=playground, sensitivity=movingScale))
+        if event.type == launchEnemyMissile:
+            for e in Enemies:
+                e_m_x = e.xy[0] + 9
+                e_m_y = e.xy[1]
+                E_Missiles.append(EnemyMissile(xy=(e_m_x, e_m_y), playground=playground, sensitivity=movingScale))
+                e_m_x = e.xy[0] + 31
+                E_Missiles.append(EnemyMissile(xy=(e_m_x, e_m_y), playground=playground, sensitivity=movingScale))
+        
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
@@ -100,8 +117,12 @@ while running:
     for m in Missiles:
         m.collision_detect(Enemies)
 
+    for em in E_Missiles:
+        em.collision_detect1(player)
+
     for e in Enemies:
         if e.collided:
+            score += 1
             Boom.append(Explosion(e.center))
 
     
@@ -109,9 +130,20 @@ while running:
     for m in Missiles:
         m.update()
         screen.blit(m.image, m.xy)
+    
+    E_Missiles = [item for item in E_Missiles if item.available]
+    for em in E_Missiles:
+        em.update()
+        screen.blit(em.image, em.xy)
 
     Enemies = [item for item in Enemies if item.available]
     for e in Enemies:
+        # emtime += clock.tick_busy_loop(fps*2)
+        # if emtime == 100:
+        #     pygame.time.set_timer(launchEnemyMissile, 1000)
+        # if emtime == 500:
+        #     pygame.time.set_timer(launchEnemyMissile, 0)
+        #     emtime = 0
         e.update()
         screen.blit(e.image, e.xy)
 
@@ -125,12 +157,21 @@ while running:
     
     pygame.display.update()
     
-    if player.hp == -99:
+    if player.hp <= -99:
+        endtime += clock.tick_busy_loop(fps*3)
         Boom.append(Explosion(player.center))
-        time.sleep(3)
-        running = False
+        player.stop_x()
+        player.stop_y()
+        message_display("Game Over",screenWidth/2,screenHigh/2)
+        player.hp = -99
+        if 500 < (endtime):
+            running = False
+        
 
-    message_display("Hp: "+str(99 + player.hp))
+    message_display("Score: "+str(score),screenWidth/2,screenHigh/4*3)
+    message_display("Hp: "+str(99 + player.hp),100,50)
     pygame.display.update()
     dt = clock.tick(fps)
 pygame.quit()
+
+print("Your score is ", score) 
