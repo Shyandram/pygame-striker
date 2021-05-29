@@ -8,7 +8,6 @@ from attitude.game_object import GameObject
 class Heal(GameObject):
     # 全域、靜態變數
     heal_effect = []
-
     # 建構式
     def __init__(self, xy=None):
         GameObject.__init__(self)

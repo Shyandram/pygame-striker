@@ -23,7 +23,7 @@ class EnemyMissile (GameObject):
 
     def update(self):
         self._y += self._changeY
-        if self._y < self._objectBound[2]:
+        if self._y > self._objectBound[3]:
             self._available = False
         self._center = self._x +self._image.get_rect().w/2, self._y + self._image.get_rect().w /2
     
